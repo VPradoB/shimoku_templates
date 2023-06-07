@@ -16,10 +16,10 @@ pipenv install
 To configure your DoctorGO dashboard, you will need to create a .env file in the root directory of your project. You can use the .env.example file as a template.
 
 ## Usage
-To run your DoctorGO dashboard, you can execute the following command:
+To run any of the existing dashboards in the examples directory, you can use the following command:
 
 ```
-python main.py
+python <dasboard_path/dashboard_v*>
 ```
 This will run a usage example, can see the results at https://shimoku.io/sign-in
 
