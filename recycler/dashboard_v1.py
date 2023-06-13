@@ -1,4 +1,3 @@
-from os import getenv
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -15,8 +14,8 @@ def run():
     reporter = RecyclerReporter(df)
     s = ShimokuClient()
     s.create_dashboard('Recycler')
-    menu_path = 'recycler 4'
-    s.client.app.delete_all_business_apps()
+    menu_path = 'recycler'
+    s.delete_app(menu_path)
     order = 0
 
     s.client.plt.html(
@@ -156,16 +155,16 @@ def run():
     order += 1
 
     s.client.plt.rose(
-        data=reporter.month_sells_comparative_by_brand().tail(1).melt(var_name='name', value_name='value'),
+        data=reporter.month_sells_comparative_by_brand().tail(1).drop('mes', axis=1).melt(var_name='name', value_name='value'),
         menu_path=menu_path,
         order=order,
         cols_size=6,
-        rows_size=2
+        rows_size=2,
     )
     order += 1
 
     s.client.plt.doughnut(
-        data=reporter.month_sells_comparative_by_platform().tail(1).melt(var_name='name', value_name='value'),
+        data=reporter.month_sells_comparative_by_platform().tail(1).drop('mes', axis=1).melt(var_name='name', value_name='value'),
         menu_path=menu_path,
         order=order,
         cols_size=6,
@@ -179,7 +178,7 @@ def run():
     s.client.plt.html(
         html=html,
         menu_path=menu_path,
-        order=order, rows_size=0, cols_size=6,
+        order=order, rows_size=1, cols_size=6,
     )
     order += 1
 
@@ -189,12 +188,12 @@ def run():
     s.client.plt.html(
         html=html,
         menu_path=menu_path,
-        order=order, rows_size=0, cols_size=6,
+        order=order, rows_size=1, cols_size=6,
     )
     order += 1
 
     s.client.plt.rose(
-        data=reporter.month_recycle_comparative_by_brand().tail(1).melt(var_name='name', value_name='value'),
+        data=reporter.month_recycle_comparative_by_brand().tail(1).drop('mes', axis=1).melt(var_name='name', value_name='value'),
         menu_path=menu_path,
         order=order,
         cols_size=6,
@@ -203,7 +202,7 @@ def run():
     order += 1
 
     s.client.plt.doughnut(
-        data=reporter.month_recycle_comparative_by_platform().tail(1).melt(var_name='name', value_name='value'),
+        data=reporter.month_recycle_comparative_by_platform().tail(1).drop('mes', axis=1).melt(var_name='name', value_name='value'),
         menu_path=menu_path,
         order=order,
         cols_size=6,
@@ -228,13 +227,12 @@ def run():
         cols_size=12,
         rows_size=2,
     )
-
-
-def delete_app(shimoku, app_name: str):
-    app_id = shimoku.app.get_app_by_name(business_id=shimoku.app.business_id, name=app_name)["id"]
-    shimoku.app.delete_app(business_id=shimoku.app.business_id, app_id=app_id)
+    return s
 
 
 if __name__ == '__main__':
     load_dotenv()
-    run()
+    s = run()
+
+    s.client.activate_async_execution()
+    s.client.run()

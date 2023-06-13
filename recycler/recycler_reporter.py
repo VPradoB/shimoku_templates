@@ -123,6 +123,17 @@ class RecyclerReporter:
         return unique_brands_monthly.fillna(0)[unique_brands_monthly.drop('created_at', axis=1).columns.tolist()]
 
 
+class TodayReporter:
+    def __init__(self, df: pd.DataFrame):
+        self.df = df
+        self.sanitize_dataframe()
+
+    def sanitize_dataframe(self):
+        """Sanitize the dataframe."""
+        self.df['created_at'] = pd.to_datetime(self.df['created_at'], format='%d/%m/%Y')
+        self.df['householdId'] = self.df['householdId'].fillna(0).astype(int)
+
+
 if __name__ == '__main__':
     df1 = pd.read_csv('sales.csv')
     df2 = pd.read_csv('users.csv')
@@ -130,4 +141,4 @@ if __name__ == '__main__':
     reporter = RecyclerReporter(df)
     primer_dia_mes = pd.Timestamp.now().to_period('M').to_timestamp()
     data = reporter.sales_with_problems()
-    print(reporter.month_sells_comparative_by_brand().tail(12).reset_index(drop=True))
+    print(reporter.month_sells_comparative_by_platform().tail(1).drop('mes', axis=1).melt(var_name='name', value_name='value'))

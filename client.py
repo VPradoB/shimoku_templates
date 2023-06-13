@@ -14,7 +14,7 @@ class ShimokuClient:
                 access_token=access_token,
                 universe_id=universe_id,
                 business_id=business_id,
-                verbosity='DEBUG'
+                async_execution=True,
             )
         except Exception:
             print('Error al conectar con Shimoku')
