@@ -1,6 +1,5 @@
 import os
 
-import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -12,7 +11,6 @@ def run():
     df = pd.read_csv('mau_doctorgo/data.csv')
     s = ShimokuClient()
     s.create_dashboard(os.getenv('DASHBOARD_NAME'))
-    s.delete_app('Usuarios activos mensuales')
     reporter = MauReporter(df)
 
     s.client.plt.html(
@@ -107,10 +105,12 @@ def run():
         calculate_percentages=True
     )
 
-
-
+    return s
 
 
 if __name__ == '__main__':
     load_dotenv()
-    run()
+    s = run()
+
+    s.client.activate_async_execution()
+    s.client.run()

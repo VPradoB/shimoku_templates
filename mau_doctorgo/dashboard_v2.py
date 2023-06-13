@@ -1,6 +1,5 @@
 import os
 
-import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -15,7 +14,6 @@ def run():
     s = ShimokuClient()
     s.create_dashboard(os.getenv('DASHBOARD_NAME'))
     menu_path = 'Usuarios activos mensuales v2'
-    s.delete_app(menu_path)
     order = 0
 
     s.client.plt.html(
@@ -205,7 +203,12 @@ def run():
     )
     order += 1
 
+    return s
+
 
 if __name__ == '__main__':
     load_dotenv()
-    run()
+    s = run()
+
+    s.client.activate_async_execution()
+    s.client.run()
