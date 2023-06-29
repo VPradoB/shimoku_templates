@@ -22,6 +22,17 @@ def run():
             button_text='Visit Google',
         ),
     )
+    order += 1
+
+    s.client.plt.html(
+        menu_path=menu_path, order=order, cols_size=12, rows_size=2,
+        html=s.client.html_components.create_h1_title_with_modal(
+            title='Titulazo con estilo',
+            subtitle='Barra con modal',
+            background_color='var(--color-base-icon)',
+            modal_title='El titulo en cuestión',
+            modal_text='un modal muy bonito.')
+    )
     return s
 
 
